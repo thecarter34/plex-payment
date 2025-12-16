@@ -2,9 +2,8 @@ version: '3.8'
 
 services:
   plex-payment:
-    # Docker Hub Image
-    # REPLACE 'your-docker-username' with your actual username
-    image: <your-docker-username>/plex-payment:latest
+    # Docker Hub Image (Official)
+    image: thecarter34/plex-payment:latest
     
     # Force check for updates on every restart
     pull_policy: always
