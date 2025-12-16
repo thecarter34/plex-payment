@@ -13,14 +13,14 @@ services:
     environment:
       # --- Venmo Configuration ---
       # Your Venmo username (without the @)
-      - VENMO_HANDLE=jjcarter34
+      - VENMO_HANDLE=
       
       # --- Email Configuration ---
       # Example for Gmail: smtp.gmail.com / 587
       - SMTP_HOST=smtp.gmail.com
       - SMTP_PORT=587
       # Your full email address
-      - SMTP_USER=littlecarter21@gmail.com
+      - SMTP_USER=
       # Your App Password (NOT your normal password)
       - SMTP_PASS=""
       # The name/email people see it coming from
@@ -28,4 +28,5 @@ services:
       
       # Internal app port (Do not change this)
       - PORT=3000
+
 
