@@ -22,9 +22,10 @@ services:
       # Your full email address
       - SMTP_USER=littlecarter21@gmail.com
       # Your App Password (NOT your normal password)
-      - SMTP_PASS="fhsp bknj gntd wsna"
+      - SMTP_PASS=""
       # The name/email people see it coming from
       - EMAIL_FROM=PLEX ADMIN
       
       # Internal app port (Do not change this)
       - PORT=3000
+
