@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  plex-payment:
+    # REPLACE 'your-github-username' with your actual GitHub username
+    image: ghcr.io/thecarter34/plex-payment:latest
+    container_name: plex-payment
+    restart: unless-stopped
+    ports:
+      # Format: "HostPort:ContainerPort"
+      # Change 9000 to whatever port you want to use on your NAS
+      - "9000:3000"
+    environment:
+      # --- Venmo Configuration ---
+      # Your Venmo username (without the @)
+      - VENMO_HANDLE=jjcarter34
+      
+      # --- Email Configuration ---
+      # Example for Gmail: smtp.gmail.com / 587
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      # Your full email address
+      - SMTP_USER=littlecarter21@gmail.com
+      # Your App Password (NOT your normal password)
+      - SMTP_PASS="fhsp bknj gntd wsna"
+      # The name/email people see it coming from
+      - EMAIL_FROM=PLEX ADMIN
+      
+      # Internal app port (Do not change this)
+      - PORT=3000
