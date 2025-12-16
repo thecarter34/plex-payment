@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  plex-payment:
+    # Docker Hub Image
+    # REPLACE 'your-docker-username' with your actual username
+    image: <your-docker-username>/plex-payment:latest
+    
+    # Force check for updates on every restart
+    pull_policy: always
+    restart: unless-stopped
+    
+    ports:
+      # Map Host Port 10000 to Container Port 3000
+      - "10000:3000"
+      
+    environment:
+      # --- Venmo Configuration ---
+      # Your Venmo username (without the @)
+      - VENMO_HANDLE=<YOUR_VENMO_HANDLE>
+      
+      # Internal app port (Do not change)
+      - PORT=3000
+
+      # --- Email Configuration (Gmail Example) ---
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+        
+      # Your full Gmail address
+      - SMTP_USER=<YOUR_GMAIL_ADDRESS>
+      
+      # Your Google App Password (16 chars, no spaces)
+      # Generate at: myaccount.google.com/apppasswords
+      - SMTP_PASS=<YOUR_APP_PASSWORD>
+      
+      # The name users see in their inbox
+      - EMAIL_FROM=Plex Server Admin
