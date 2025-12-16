@@ -56,8 +56,12 @@ app.post('/webhook', async (req, res) => {
         let userEmail = null;
         if (payload.email) {
             userEmail = payload.email;
-        } else if (payload.request && payload.request.requestedBy && payload.request.requestedBy.email) {
-            userEmail = payload.request.requestedBy.email;
+        } else if (payload.request) {
+            if (payload.request.requestedBy_email) {
+                userEmail = payload.request.requestedBy_email;
+            } else if (payload.request.requestedBy && payload.request.requestedBy.email) {
+                userEmail = payload.request.requestedBy.email;
+            }
         }
 
         // Fallback for test
