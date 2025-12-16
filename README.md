@@ -21,9 +21,35 @@ You do **not** need to download or modify the code. You can simply deploy the pr
 ### 1. Deploy via Docker Compose (TrueNAS)
 Use the `install.template.yaml` file provided in this repo.
 
-1.  Copy the content of `install.template.yaml`.
-2.  Fill in your Environment Variables (Email, Password, Venmo).
-    *   **Image**: `thecarter34/plex-payment:latest`
+1.  **Copy the YAML below:**
+
+    ```yaml
+    version: '3.8'
+
+    services:
+      plex-payment:
+        # Official Docker Image
+        image: thecarter34/plex-payment:latest
+        pull_policy: always
+        restart: unless-stopped
+        ports:
+          # Host Port : Container Port
+          - "10000:3000"
+        environment:
+          # --- Venmo Configuration ---
+          - VENMO_HANDLE=your_venmo_username
+          - PORT=3000
+
+          # --- Email Configuration (Gmail) ---
+          - SMTP_HOST=smtp.gmail.com
+          - SMTP_PORT=587
+          - SMTP_USER=your_email@gmail.com
+          # App Password (16 chars, no spaces)
+          - SMTP_PASS=abcdefghijklmnop
+          - EMAIL_FROM=Plex Admin
+    ```
+
+2.  Fill in your `VENMO_HANDLE`, `SMTP_USER`, and `SMTP_PASS`.
 3.  Paste into TrueNAS "Custom App" or Portainer Stack.
 4.  Click Install.
 
