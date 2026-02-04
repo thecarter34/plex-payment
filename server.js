@@ -88,7 +88,7 @@ app.post('/webhook', async (req, res) => {
                 <h2>Plex Request Received</h2>
                 <p>Hello,</p>
                 <p>We received your request for <strong>${subject}</strong>.</p>
-                <p>To process this request, please contribute via Venmo.</p>
+                <p>Please consider buying me a coffee for all of my hard work in making your life better :)</p>
                 <p><a href="${venmoPayUrl}" style="background-color: #3D95CE; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Pay with Venmo</a></p>
                 <p>Or use this link: ${venmoPayUrl}</p>
                 <p>Thanks!</p>
@@ -121,3 +121,4 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
