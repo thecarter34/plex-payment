@@ -11,7 +11,7 @@ This lightweight Docker application acts as a middleware between Overseerr and y
 ## Prerequisites
 
 1.  **System**: TrueNAS Scale, Unraid, or any system with Docker.
-2.  **Overseer Request Softare: The interface people use to make requests.
+2.  Overseerr: The interface people use to make requests.
 3.  **Gmail Account**: For sending emails (App Password required).
 4.  **Venmo Account**: To receive payments.
 
@@ -70,4 +70,5 @@ Use the `install.template.yaml` file provided in this repo.
 | `SMTP_USER` | Your Email Address | `me@gmail.com` |
 | `SMTP_PASS` | App Password (No spaces) | `abcdefghijklmnop` |
 | `EMAIL_FROM` | Sender Name | `Plex Admin` |
+
 
