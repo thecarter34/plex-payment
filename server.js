@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -16,6 +18,9 @@ const SMTP_PORT = process.env.SMTP_PORT || 587;
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
 const EMAIL_FROM = process.env.EMAIL_FROM;
+
+// Load HTML email template once at startup
+const EMAIL_TEMPLATE = fs.readFileSync(path.join(__dirname, 'templates', 'email.html'), 'utf8');
 
 if (!VENMO_HANDLE) {
     console.warn('WARNING: VENMO_HANDLE is not set. Links will likely fail.');
@@ -42,11 +47,14 @@ app.post('/webhook', async (req, res) => {
 
     const notificationType = payload.notification_type;
 
-    // We only care about PENDING requests usually, or explicitly requested ones.
-    // 'MEDIA_PENDING' is a common type for new requests needing approval.
-    if (notificationType === 'MEDIA_PENDING' || notificationType === 'TEST_NOTIFICATION') {
+    // Only act on approved requests + test pings. We removed MEDIA_PENDING so
+    // we don't charge users for requests that get denied.
+    if (notificationType === 'MEDIA_APPROVED' || notificationType === 'MEDIA_AUTO_APPROVED' || notificationType === 'TEST_NOTIFICATION') {
         const subject = payload.subject || 'Unknown Title';
         const message = payload.message || '';
+
+        // Detect auto-approve for slightly different copy in the email
+        const autoApproved = notificationType === 'MEDIA_AUTO_APPROVED';
 
         // Overseerr sends user info in internal objects often, but payload varies.
         // Assuming we can get email from 'request' object or 'user' object if provided.
@@ -79,26 +87,21 @@ app.post('/webhook', async (req, res) => {
             // We'll leave amount blank for them to fill, or set a default if provided in env?
             // Let's stick to a generic web link for compatibility, or give both.
 
-            const venmoWebUrl = `https://venmo.com/${VENMO_HANDLE}`;
-            // Construct a "pay" specific link if possible or just the profile. 
-            // Better: https://venmo.com/?txn=pay&recipients=${VENMO_HANDLE}&note=${encodeURIComponent(subject)}
             const venmoPayUrl = `https://venmo.com/?txn=pay&recipients=${VENMO_HANDLE}&note=${encodeURIComponent("Plex Request: " + subject)}`;
 
-            const emailContent = `
-                <h2>Plex Request Received</h2>
-                <p>Hello,</p>
-                <p>We received your request for <strong>${subject}</strong>.</p>
-                <p>Please consider buying me a coffee for all of my hard work in making your life better :)</p>
-                <p><a href="${venmoPayUrl}" style="background-color: #3D95CE; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Pay with Venmo</a></p>
-                <p>Or use this link: ${venmoPayUrl}</p>
-                <p>Thanks!</p>
-            `;
+            // Render the email template with the actual values
+            const emailContent = EMAIL_TEMPLATE
+                .replace(/\{\{SUBJECT\}\}/g, subject)
+                .replace(/\{\{VENMO_URL\}\}/g, venmoPayUrl)
+                .replace(/\{\{YEAR\}\}/g, new Date().getFullYear().toString());
 
             try {
                 await transporter.sendMail({
                     from: EMAIL_FROM,
                     to: userEmail,
-                    subject: `Action Required: Plex Request for ${subject}`,
+                    subject: autoApproved
+                        ? `Available now: ${subject}`
+                        : `Approved: ${subject} on Plex`,
                     html: emailContent,
                 });
                 console.log(`Email sent to ${userEmail}`);
