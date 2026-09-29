@@ -53,9 +53,6 @@ app.post('/webhook', async (req, res) => {
         const subject = payload.subject || 'Unknown Title';
         const message = payload.message || '';
 
-        // Detect auto-approve for slightly different copy in the email
-        const autoApproved = notificationType === 'MEDIA_AUTO_APPROVED';
-
         // Overseerr sends user info in internal objects often, but payload varies.
         // Assuming we can get email from 'request' object or 'user' object if provided.
         // Standard Overseerr webhook might just have 'email' if configured in the payload options json?
@@ -72,9 +69,11 @@ app.post('/webhook', async (req, res) => {
             }
         }
 
-        // Fallback for test
+        // Test notifications: if a real email is included, fire a real test email
+        // end-to-end. If no email is in the payload (the default for Overseerr's
+        // "Test" button), just ack so we don't 500.
         if (notificationType === 'TEST_NOTIFICATION' && !userEmail) {
-            console.log('Test notification received.');
+            console.log('Test notification received (no email in payload — ack only).');
             return res.status(200).send('Test received');
         }
 
@@ -99,9 +98,7 @@ app.post('/webhook', async (req, res) => {
                 await transporter.sendMail({
                     from: EMAIL_FROM,
                     to: userEmail,
-                    subject: autoApproved
-                        ? `Available now: ${subject}`
-                        : `Approved: ${subject} on Plex`,
+                    subject: `Request Approved: ${subject}`,
                     html: emailContent,
                 });
                 console.log(`Email sent to ${userEmail}`);
