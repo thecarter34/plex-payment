@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img">
+  <title>plex-payment</title>
+  <desc>Self-hosted Plex billing app icon: a white credit card silhouette with a Plex-orange right-pointing play triangle inside, representing Plex media payments.</desc>
+
+  <!-- Dark squircle background, 8px corner radius -->
+  <rect x="0" y="0" width="64" height="64" rx="8" ry="8" fill="#0d1117"/>
+
+  <!-- White angular card silhouette, 48x32 centered, rx=4 for sharp angular corners -->
+  <rect x="8" y="16" width="48" height="32" rx="4" ry="4" fill="#FFFFFF"/>
+
+  <!-- Plex-orange play triangle: enlarged to 32x28 so it reads as a chevron at 32px -->
+  <polygon points="18,18 18,46 50,32" fill="#E5A00D"/>
+</svg>
